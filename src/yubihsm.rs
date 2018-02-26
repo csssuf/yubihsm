@@ -1,4 +1,4 @@
-use connector::Connector;
+use connector::{Connector, ConnectorError};
 use types::*;
 
 use failure::Error;
@@ -46,7 +46,7 @@ impl Yubihsm {
             ));
 
             if ret != ReturnCode::Success {
-                bail!("couldn't create connector: {}", ret);
+                bail!(ConnectorError::CreationFailed { rc: ret });
             }
         }
 

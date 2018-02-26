@@ -30,7 +30,7 @@ impl Connector {
             let ret = ReturnCode::from(yubihsm_sys::yh_connect_best(&mut this, 1, ptr::null_mut()));
 
             if ret != ReturnCode::Success {
-                bail!("failed to connect: {}", ret);
+                bail!(ConnectorError::ConnectionFailed { rc: ret });
             }
         }
 
@@ -48,7 +48,7 @@ impl Connector {
         recreate_session: bool,
     ) -> Result<Session, Error> {
         if !self.connected.get() {
-            bail!("tried to use unconnected connector");
+            bail!(ConnectorError::Unconnected);
         }
 
         let mut session_ptr: *mut yh_session = ptr::null_mut();
@@ -113,7 +113,7 @@ impl Connector {
             ));
 
             if ret != ReturnCode::Success {
-                bail!("failed to get device info: {}", ret);
+                bail!(ConnectorError::DeviceInfoFailed { rc: ret });
             }
 
             algorithms.set_len(algorithm_count);
@@ -140,4 +140,16 @@ impl Drop for Connector {
             unsafe { yubihsm_sys::yh_disconnect(self.this.get()); }
         }
     }
+}
+
+#[derive(Clone, Debug, Fail)]
+pub enum ConnectorError {
+    #[fail(display = "creating connector failed: {}", rc)]
+    CreationFailed { rc: ReturnCode },
+    #[fail(display = "connection failed: {}", rc)]
+    ConnectionFailed { rc: ReturnCode },
+    #[fail(display = "attempted to use unconnected connector")]
+    Unconnected,
+    #[fail(display = "yh_util_get_device_info failed: {}", rc)]
+    DeviceInfoFailed { rc: ReturnCode },
 }
