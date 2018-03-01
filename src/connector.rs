@@ -128,9 +128,9 @@ impl Connector {
                 pre: vec![],
                 build: vec![],
             },
-            serial: serial,
+            serial,
             log_capacity: log_total,
-            log_used: log_used,
+            log_used,
             algorithms: algorithms
                 .into_iter()
                 .map(Algorithm::from)
