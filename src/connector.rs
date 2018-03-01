@@ -137,6 +137,30 @@ impl Connector {
                 .collect::<Vec<_>>(),
         })
     }
+
+    pub fn version(&self) -> Result<Version, Error> {
+        let mut major: u8 = 0;
+        let mut minor: u8 = 0;
+        let mut patch: u8 = 0;
+
+        unsafe {
+            match ReturnCode::from(yubihsm_sys::yh_get_connector_version(
+                self.this.get(),
+                &mut major,
+                &mut minor,
+                &mut patch,
+            )) {
+                ReturnCode::Success => Ok(Version {
+                    major: major.into(),
+                    minor: minor.into(),
+                    patch: patch.into(),
+                    pre: vec![],
+                    build: vec![],
+                }),
+                e => bail!("failed to get connector version: {}", e),
+            }
+        }
+    }
 }
 
 impl Drop for Connector {
