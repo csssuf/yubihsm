@@ -89,7 +89,7 @@ impl Connector {
         Ok(Session::new(session_ptr))
     }
 
-    pub fn get_device_info(&self) -> Result<DeviceInfo, Error> {
+    pub fn device_info(&self) -> Result<DeviceInfo, Error> {
         let mut major: u8 = 0;
         let mut minor: u8 = 0;
         let mut patch: u8 = 0;
