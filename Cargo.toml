@@ -8,3 +8,4 @@ bindgen = "0.32"
 
 [dependencies]
 failure = "0.1"
+semver = "0.9"

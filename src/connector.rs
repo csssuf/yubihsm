@@ -2,6 +2,7 @@ use types::*;
 use session::Session;
 
 use failure::Error;
+use semver::Version;
 use yubihsm_sys::{self, yh_algorithm, yh_connector, yh_session, YH_CONTEXT_LEN,
                   YH_MAX_ALGORITHM_COUNT};
 
@@ -120,9 +121,13 @@ impl Connector {
         }
 
         Ok(DeviceInfo {
-            major_version: major,
-            minor_version: minor,
-            patch_version: patch,
+            version: Version {
+                major: major.into(),
+                minor: minor.into(),
+                patch: patch.into(),
+                pre: vec![],
+                build: vec![],
+            },
             serial: serial,
             log_capacity: log_total,
             log_used: log_used,

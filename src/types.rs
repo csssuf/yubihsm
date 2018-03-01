@@ -1,4 +1,5 @@
 use failure::Error;
+use semver::Version;
 use yubihsm_sys::*;
 
 use std::ffi::{CStr, CString};
@@ -626,9 +627,7 @@ where
 
 #[derive(Clone, Debug)]
 pub struct DeviceInfo {
-    pub major_version: u8,
-    pub minor_version: u8,
-    pub patch_version: u8,
+    pub version: Version,
     pub serial: u32,
     pub log_capacity: u8,
     pub log_used: u8,

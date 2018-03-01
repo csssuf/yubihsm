@@ -2,6 +2,7 @@
 
 #[macro_use]
 extern crate failure;
+extern crate semver;
 
 mod yubihsm_sys {
     #![allow(non_upper_case_globals)]
